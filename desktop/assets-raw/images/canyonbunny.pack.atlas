@@ -1,0 +1,41 @@
+
+canyonbunny.pack.png
+size: 1024,128
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+bunny_head
+  rotate: false
+  xy: 566, 8
+  size: 122, 82
+  orig: 122, 82
+  offset: 0, 0
+  index: -1
+cloud01
+  rotate: false
+  xy: 386, 12
+  size: 178, 78
+  orig: 178, 78
+  offset: 0, 0
+  index: -1
+cloud02
+  rotate: false
+  xy: 2, 2
+  size: 198, 88
+  orig: 198, 88
+  offset: 0, 0
+  index: -1
+cloud03
+  rotate: false
+  xy: 202, 5
+  size: 182, 85
+  orig: 182, 85
+  offset: 0, 0
+  index: -1
+item_feather
+  rotate: false
+  xy: 690, 50
+  size: 46, 40
+  orig: 46, 40
+  offset: 0, 0
+  index: -1
