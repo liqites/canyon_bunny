@@ -8,7 +8,7 @@ import com.badlogic.gdx.tools.texturepacker.TexturePacker.Settings;
 
 public class DesktopLauncher {
 
-	private static boolean rebuildAtlas = true;
+	private static boolean rebuildAtlas = false;
 	private static boolean drawDebugOutline = true;
 
 	public static void main (String[] arg) {
@@ -19,7 +19,7 @@ public class DesktopLauncher {
 			settings.maxHeight = 1024;
 			settings.duplicatePadding = false;
 			settings.debug = drawDebugOutline;
-			TexturePacker.process(settings, "desktop/assets-raw/images", "desktop/assets-raw/atlas", "canyonbunny.pack");
+			TexturePacker.process(settings, "desktop/assets-raw/images", "core/assets", "canyonbunny.pack");
 		}
 
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();

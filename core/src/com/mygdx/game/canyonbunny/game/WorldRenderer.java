@@ -26,10 +26,10 @@ public class WorldRenderer implements Disposable {
     }
 
     public void render() {
-        renderTextObjects();
+        renderTestObjects();
     }
 
-    private void renderTextObjects() {
+    private void renderTestObjects() {
         worldController.cameraHelper.applyTo(camera);
         batch.setProjectionMatrix(camera.combined);
         batch.begin();

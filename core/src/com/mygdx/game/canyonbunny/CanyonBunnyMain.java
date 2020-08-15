@@ -6,6 +6,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.mygdx.game.canyonbunny.game.WorldController;
 import com.mygdx.game.canyonbunny.game.WorldRenderer;
+import com.badlogic.gdx.assets.AssetManager;
+import com.mygdx.game.canyonbunny.game.Assets;
 
 public class CanyonBunnyMain extends ApplicationAdapter {
 	static final String TAG = CanyonBunnyMain.class.getName();
@@ -20,6 +22,9 @@ public class CanyonBunnyMain extends ApplicationAdapter {
 		// Set Libgdx log level to DEBUG
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
 		// NOTE: change to LOG_NONE or LOG_INFO before publish code
+
+		// Load Assets
+		Assets.instance.init(new AssetManager());
 
 		// Initialize controller and renderer
 		worldController = new WorldController();
@@ -38,6 +43,7 @@ public class CanyonBunnyMain extends ApplicationAdapter {
 		}
 		// Set the clear screen color to: Cornflower Blue
 		Gdx.gl.glClearColor(0x64/255.0f, 0x95/255.0f, 0xed/255.0f, 0xff/255.0f);
+
 		// Clears the screen
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -59,11 +65,13 @@ public class CanyonBunnyMain extends ApplicationAdapter {
 
 	@Override
 	public void resume() {
+		Assets.instance.init(new AssetManager());
 		paused = false;
 	}
 
 	@Override
 	public void dispose () {
 		worldRenderer.dispose();
+		Assets.instance.dispose();
 	}
 }
