@@ -76,6 +76,15 @@ public class WorldRenderer implements Disposable {
         }
     }
 
+    private void renderGuiBunnyJumpSatte(SpriteBatch batch) {
+        float x = cameraGUI.viewportWidth - 255;
+        float y = cameraGUI.viewportHeight - 15;
+        // int fps = Gdx.graphics.getFramesPerSecond();
+        BitmapFont bunnyFont = Assets.instance.fonts.defaultNormal;
+        bunnyFont.draw(batch, "JumpState: " + worldController.level.bunnyHead.jumpState, x, y);
+        bunnyFont.setColor(1, 1, 1, 1);
+    }
+
     private void renderGuiFpsCounter(SpriteBatch batch) {
         float x = cameraGUI.viewportWidth - 55;
         float y = cameraGUI.viewportHeight - 15;
@@ -107,6 +116,8 @@ public class WorldRenderer implements Disposable {
         // draw FPS text
         // (anchored to bottom right edge)
         renderGuiFpsCounter(batch);
+
+        renderGuiBunnyJumpSatte(batch);
         batch.end();
     }
 

@@ -21,7 +21,7 @@ public class CanyonBunnyMain extends ApplicationAdapter {
 	public void create () {
 		// Set Libgdx log level to DEBUG
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
-		// NOTE: change to LOG_NONE or LOG_INFO before publish code
+		// TODO: change to LOG_NONE or LOG_INFO before publish code
 
 		// Load Assets
 		Assets.instance.init(new AssetManager());
