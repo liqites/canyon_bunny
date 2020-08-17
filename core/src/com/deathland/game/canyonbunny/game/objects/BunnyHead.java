@@ -67,7 +67,7 @@ public class BunnyHead extends AbstractGameObject{
          case FALLING: // FALLING down
          case JUMP_FALLING: // Falling down after jump
             if(jumpKeyPressed && hasFeatherPowerup) {
-               // TODO: 李其猜测
+               // TODO: 猜测
                // 如果获得了羽毛能量，则可以在下落的过程中再次弹跳。
                timeJumping = JUMP_TIME_OFFSET_FLYING;
                jumpState = JUMP_STATE.JUMP_RISING;
