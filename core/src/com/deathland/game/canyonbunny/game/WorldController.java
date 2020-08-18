@@ -1,6 +1,7 @@
 package com.deathland.game.canyonbunny.game;
 
 import com.badlogic.gdx.Application;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
@@ -13,6 +14,7 @@ import com.deathland.game.canyonbunny.util.Constants;
 import com.badlogic.gdx.math.Rectangle;
 import com.deathland.game.canyonbunny.game.objects.BunnyHead;
 import com.deathland.game.canyonbunny.game.objects.BunnyHead.JUMP_STATE;
+import com.deathland.game.canyonbunny.screens.MenuScreen;
 import com.deathland.game.canyonbunny.game.objects.Feather;
 import com.deathland.game.canyonbunny.game.objects.GoldCoin;
 import com.deathland.game.canyonbunny.game.objects.Rock;
@@ -20,12 +22,20 @@ import com.deathland.game.canyonbunny.game.objects.Rock;
 public class WorldController extends InputAdapter{
     private static final String TAG = WorldController.class.getName();
 
+    private Game game;
+
+    private void backToMenu() {
+        // switch to menu screen
+        game.setScreen(new MenuScreen(game));
+    }
+
     public CameraHelper cameraHelper;
     public Level level;
     public int lives;
     public int score;
 
-    public WorldController() {
+    public WorldController(Game game) {
+        this.game = game;
         init();
     }
 
@@ -62,7 +72,9 @@ public class WorldController extends InputAdapter{
         handleDebugInput(deltaTime);
         if(isGameOver()) {
             timeLeftGameOverDelay -= deltaTime;
-            if(timeLeftGameOverDelay < 0) init();
+            if(timeLeftGameOverDelay < 0) {
+                backToMenu();
+            }
         } else {
             handleInputGame(deltaTime);
         }
@@ -167,6 +179,8 @@ public class WorldController extends InputAdapter{
             // Toggle camera follow
             cameraHelper.setTarget(cameraHelper.hasTarget() ? null : level.bunnyHead);
             Gdx.app.debug(TAG, "Camera follow enabled: " + cameraHelper.hasTarget());
+        } else if(keycode == Keys.ESCAPE || keycode == Keys.BACK) {
+            backToMenu();
         }
 
         return false;
