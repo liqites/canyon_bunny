@@ -342,8 +342,10 @@ public class MenuScreen extends AbstractGameScreen {
       }
       stage.act(deltaTime);
       stage.draw();
-      stage.setDebugAll(true);
+
+      // FIXME: 原来的方法已经废弃了，使用新的 debug 方法
       // Table.drawDebug(stage);
+      stage.setDebugAll(true);
 
       // if (Gdx.input.isTouched()) {
          // game.setScreen(new GameScreen(game));
