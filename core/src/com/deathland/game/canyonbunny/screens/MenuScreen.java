@@ -293,10 +293,12 @@ public class MenuScreen extends AbstractGameScreen {
    }
 
    private void onPlayClicked() {
+      Gdx.app.debug(TAG, "onPlayClicked");
       game.setScreen(new GameScreen(game));
    }
 
    private void onOptionsClicked() {
+      Gdx.app.debug(TAG, "onOptionsClicked");
       loadSettings();
       btnMenuPlay.setVisible(false);
       btnMenuOptions.setVisible(false);
@@ -343,9 +345,9 @@ public class MenuScreen extends AbstractGameScreen {
       stage.setDebugAll(true);
       // Table.drawDebug(stage);
 
-      if (Gdx.input.isTouched()) {
-         game.setScreen(new GameScreen(game));
-      }
+      // if (Gdx.input.isTouched()) {
+         // game.setScreen(new GameScreen(game));
+      // }
    }
 
    @Override
