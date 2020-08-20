@@ -3,9 +3,13 @@ package com.deathland.game.canyonbunny.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeType.Bitmap;
 import com.badlogic.gdx.utils.Disposable;
 import com.deathland.game.canyonbunny.util.Constants;
+import com.deathland.game.canyonbunny.util.GamePreferences;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 
 // 主要负责渲染
 public class WorldRenderer implements Disposable {
@@ -76,6 +80,15 @@ public class WorldRenderer implements Disposable {
         }
     }
 
+    private void renderGuiBunnyJumpSate(SpriteBatch batch) {
+        float x = cameraGUI.viewportWidth - 255;
+        float y = cameraGUI.viewportHeight - 15;
+        // int fps = Gdx.graphics.getFramesPerSecond();
+        BitmapFont bunnyFont = Assets.instance.fonts.defaultNormal;
+        bunnyFont.draw(batch, "JumpState: " + worldController.level.bunnyHead.jumpState, x, y);
+        bunnyFont.setColor(1, 1, 1, 1);
+    }
+
     private void renderGuiFpsCounter(SpriteBatch batch) {
         float x = cameraGUI.viewportWidth - 55;
         float y = cameraGUI.viewportHeight - 15;
@@ -101,12 +114,21 @@ public class WorldRenderer implements Disposable {
         // draw collected gold coin icon + text
         // (anchored to top left edge
         renderGuiScore(batch);
+        // draw collected feather icon (anchored to top left edge)
+        renderGuiFeatherPowerup(batch);
         // draw extra lives icon + text
         // (anchored to top right edge)
         renderGuidExtraLive(batch);
         // draw FPS text
         // (anchored to bottom right edge)
-        renderGuiFpsCounter(batch);
+        if (GamePreferences.instance.showFpsCounter) {
+            renderGuiFpsCounter(batch);
+        }
+        
+        // draw game over text
+        renderGuiGameOverMessage(batch);
+
+        renderGuiBunnyJumpSate(batch);
         batch.end();
     }
 
@@ -116,6 +138,56 @@ public class WorldRenderer implements Disposable {
         batch.begin();
         worldController.level.render(batch);
         batch.end();
+    }
+
+    private void renderGuiGameOverMessage(SpriteBatch batch) {
+        float x = cameraGUI.viewportWidth / 2;
+        float y = cameraGUI.viewportHeight / 2;
+        if(worldController.isGameOver()) {
+            BitmapFont fontGameOver = Assets.instance.fonts.defaultBig;
+            fontGameOver.draw(
+                batch, 
+                "GAME OVER", 
+                x, 
+                y
+            );
+            fontGameOver.setColor(1, 1, 1, 1);
+        }
+    }
+
+    private void renderGuiFeatherPowerup(SpriteBatch batch) {
+        float x = -15;
+        float y = 30;
+        float timeLeftFeatherPowerup = worldController.level.bunnyHead.timeLeftFeatherPowerup;
+        if(timeLeftFeatherPowerup > 0) {
+            // Start icon fade in/out if the left power-up time
+            // is less than 4 seconds. The fade interval is set
+            // to 55 changes per seconds.
+            if(timeLeftFeatherPowerup < 4) {
+                if(((int)(timeLeftFeatherPowerup * 5) % 2) != 0) {
+                    batch.setColor(1, 1, 1, 0.5f);
+                }
+            }
+            batch.draw(
+                Assets.instance.feather.feather,
+                x,
+                y,
+                50,
+                50,
+                100,
+                100,
+                0.35f,
+                -0.35f,
+                0
+            );
+            batch.setColor(1, 1, 1, 1);
+            Assets.instance.fonts.defaultSmall.draw(
+                batch,
+                "" + (int)timeLeftFeatherPowerup,
+                x + 60,
+                y + 57
+            );
+        }
     }
 
     public void resize(int width, int height) {
