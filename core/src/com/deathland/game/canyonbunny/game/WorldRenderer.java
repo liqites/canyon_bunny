@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeType.Bitmap;
 import com.badlogic.gdx.utils.Disposable;
 import com.deathland.game.canyonbunny.util.Constants;
+import com.deathland.game.canyonbunny.util.GamePreferences;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -79,7 +80,7 @@ public class WorldRenderer implements Disposable {
         }
     }
 
-    private void renderGuiBunnyJumpSatte(SpriteBatch batch) {
+    private void renderGuiBunnyJumpSate(SpriteBatch batch) {
         float x = cameraGUI.viewportWidth - 255;
         float y = cameraGUI.viewportHeight - 15;
         // int fps = Gdx.graphics.getFramesPerSecond();
@@ -120,11 +121,14 @@ public class WorldRenderer implements Disposable {
         renderGuidExtraLive(batch);
         // draw FPS text
         // (anchored to bottom right edge)
-        renderGuiFpsCounter(batch);
-
+        if (GamePreferences.instance.showFpsCounter) {
+            renderGuiFpsCounter(batch);
+        }
+        
+        // draw game over text
         renderGuiGameOverMessage(batch);
 
-        renderGuiBunnyJumpSatte(batch);
+        renderGuiBunnyJumpSate(batch);
         batch.end();
     }
 

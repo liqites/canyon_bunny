@@ -6,6 +6,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
 import com.deathland.game.canyonbunny.game.WorldController;
 import com.deathland.game.canyonbunny.game.WorldRenderer;
+import com.deathland.game.canyonbunny.util.GamePreferences;
 
 public class GameScreen extends AbstractGameScreen{
    private static final String TAG = GameScreen.class.getName();
@@ -49,6 +50,7 @@ public class GameScreen extends AbstractGameScreen{
 
    @Override
    public void show() {
+      GamePreferences.instance.load();
       worldController = new WorldController(game);
       worldRenderer = new WorldRenderer(worldController);
       // Gdx.input.setCatchBackKey(true);
