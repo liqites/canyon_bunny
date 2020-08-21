@@ -1,11 +1,11 @@
-arguments=
+arguments=--stacktrace --info
 auto.sync=false
 build.scans.enabled=false
 connection.gradle.distribution=GRADLE_DISTRIBUTION(WRAPPER)
 connection.project.dir=
 eclipse.preferences.version=1
 gradle.user.home=
-java.home=/usr
+java.home=/Library/Java/JavaVirtualMachines/openjdk-14.0.2.jdk/Contents/Home
 jvm.arguments=
 offline.mode=false
 override.workspace.settings=true
