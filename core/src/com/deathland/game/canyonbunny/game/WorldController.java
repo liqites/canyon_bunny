@@ -89,6 +89,7 @@ public class WorldController extends InputAdapter{
                 initLevel();
             }
         }
+        level.mountains.updateScrollPosition(cameraHelper.getPosition());
     }
 
     private void handleDebugInput(float deltaTime) {
