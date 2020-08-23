@@ -2,6 +2,7 @@ package com.deathland.game.canyonbunny.screens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -22,6 +23,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.deathland.game.canyonbunny.game.Assets;
+import com.deathland.game.canyonbunny.screens.transitions.ScreenTransition;
+import com.deathland.game.canyonbunny.screens.transitions.ScreenTransitionFade;
 import com.deathland.game.canyonbunny.util.CharacterSkin;
 import com.deathland.game.canyonbunny.util.Constants;
 import com.deathland.game.canyonbunny.util.GamePreferences;
@@ -58,7 +61,7 @@ public class MenuScreen extends AbstractGameScreen {
    private boolean debugEnabled = false;
    private float debugRebuildStage;
 
-   public MenuScreen(Game game) {
+   public MenuScreen(DirectedGame game) {
       super(game);
    }
 
@@ -294,7 +297,8 @@ public class MenuScreen extends AbstractGameScreen {
 
    private void onPlayClicked() {
       Gdx.app.debug(TAG, "onPlayClicked");
-      game.setScreen(new GameScreen(game));
+      ScreenTransition transition = ScreenTransitionFade.init(0.75f);
+      game.setScreen(new GameScreen(game), transition);
    }
 
    private void onOptionsClicked() {
@@ -360,7 +364,6 @@ public class MenuScreen extends AbstractGameScreen {
    @Override
    public void show() {
       stage = new Stage(new StretchViewport(Constants.VIEWPORT_GUI_WIDTH, Constants.VIEWPORT_GUI_HEIGHT));
-      Gdx.input.setInputProcessor(stage);
       rebuildStage();
    }
 
@@ -372,5 +375,10 @@ public class MenuScreen extends AbstractGameScreen {
 
    @Override
    public void pause() {
+   }
+
+   @Override
+   public InputProcessor getInputProcessor() {
+      return stage;
    }
 }
