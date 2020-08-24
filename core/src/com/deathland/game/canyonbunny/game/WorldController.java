@@ -1,7 +1,6 @@
 package com.deathland.game.canyonbunny.game;
 
 import com.badlogic.gdx.Application;
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
@@ -9,6 +8,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Application.ApplicationType;
 import com.deathland.game.canyonbunny.screens.transitions.ScreenTransitionSlice;
+import com.deathland.game.canyonbunny.util.AudioManager;
 import com.deathland.game.canyonbunny.util.CameraHelper;
 import com.deathland.game.canyonbunny.util.Constants;
 import com.badlogic.gdx.math.Interpolation;
@@ -18,7 +18,6 @@ import com.deathland.game.canyonbunny.game.objects.BunnyHead.JUMP_STATE;
 import com.deathland.game.canyonbunny.screens.DirectedGame;
 import com.deathland.game.canyonbunny.screens.MenuScreen;
 import com.deathland.game.canyonbunny.screens.transitions.ScreenTransition;
-import com.deathland.game.canyonbunny.screens.transitions.ScreenTransitionSlide;
 import com.deathland.game.canyonbunny.game.objects.Feather;
 import com.deathland.game.canyonbunny.game.objects.GoldCoin;
 import com.deathland.game.canyonbunny.game.objects.Rock;
@@ -30,12 +29,6 @@ public class WorldController extends InputAdapter{
 
     private void backToMenu() {
         // switch to menu screen
-//        ScreenTransition transition = ScreenTransitionSlide.init(
-//            0.75f,
-//            ScreenTransitionSlide.DOWN,
-//            false,
-//            Interpolation.bounceOut
-//        );
 
         ScreenTransition transition = ScreenTransitionSlice.init(2, ScreenTransitionSlice.UP_DOWN, 10, Interpolation.pow5Out);
         game.setScreen(new MenuScreen(game), transition);
@@ -55,7 +48,6 @@ public class WorldController extends InputAdapter{
     }
 
     private void init() {
-        // Gdx.input.setInputProcessor(this);
         cameraHelper = new CameraHelper();
         lives = Constants.LIVES_START;
         livesVisual = lives;
@@ -99,6 +91,7 @@ public class WorldController extends InputAdapter{
         testCollision();
         cameraHelper.update(deltaTime);
         if(!isGameOver() && isPlayerInWater()) {
+            AudioManager.instance.play(Assets.instance.sounds.liveLost);
             lives --;
             if(isGameOver()) {
                 timeLeftGameOverDelay = Constants.TIME_DELAY_GAME_OVER;
@@ -244,11 +237,13 @@ public class WorldController extends InputAdapter{
 
     private void onCollisionBunnyWithGoldCoin(GoldCoin goldCoin) {
         goldCoin.collected = true;
+        AudioManager.instance.play(Assets.instance.sounds.pickupCoin);
         score += goldCoin.getScore();
         Gdx.app.log(TAG, "Gold coin collected");
     }
     private void onCollisionBunnyWithFeather(Feather feather) {
         feather.collected = true;
+        AudioManager.instance.play(Assets.instance.sounds.pickupFeather);
         score += feather.getScore();
         level.bunnyHead.setFeatherPowerup(true);
         Gdx.app.log(TAG, "Feathers collected");

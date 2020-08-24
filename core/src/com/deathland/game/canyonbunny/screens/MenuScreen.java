@@ -27,6 +27,7 @@ import com.deathland.game.canyonbunny.game.Assets;
 import com.deathland.game.canyonbunny.screens.transitions.ScreenTransition;
 import com.deathland.game.canyonbunny.screens.transitions.ScreenTransitionFade;
 import com.deathland.game.canyonbunny.screens.transitions.ScreenTransitionSlice;
+import com.deathland.game.canyonbunny.util.AudioManager;
 import com.deathland.game.canyonbunny.util.CharacterSkin;
 import com.deathland.game.canyonbunny.util.Constants;
 import com.deathland.game.canyonbunny.util.GamePreferences;
@@ -101,12 +102,14 @@ public class MenuScreen extends AbstractGameScreen {
    private void onSaveClicked() {
       saveSettings();
       onCancelClicked();
+      AudioManager.instance.onSettingUpdated();
    }
 
    private void onCancelClicked() {
       btnMenuPlay.setVisible(true);
       btnMenuOptions.setVisible(true);
       winOptions.setVisible(false);
+      AudioManager.instance.onSettingUpdated();
    }
 
    private void rebuildStage() {
@@ -300,7 +303,6 @@ public class MenuScreen extends AbstractGameScreen {
    private void onPlayClicked() {
       Gdx.app.debug(TAG, "onPlayClicked");
        ScreenTransition transition = ScreenTransitionFade.init(0.75f);
-//      ScreenTransition transition = ScreenTransitionSlice.init(2, ScreenTransitionSlice.UP_DOWN, 10, Interpolation.pow5Out);
       game.setScreen(new GameScreen(game), transition);
    }
 

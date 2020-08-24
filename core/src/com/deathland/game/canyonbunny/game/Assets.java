@@ -13,12 +13,19 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
+
 public class Assets implements Disposable, AssetErrorListener {
     public static final String TAG = Assets.class.getName();
 
     public static final Assets instance = new Assets();
 
     private AssetManager assetManager;
+
+    // Sounds and music
+    public AssetSounds sounds;
+    public AssetMusic music;
 
     //
     public AssetBunny bunny;
@@ -39,9 +46,18 @@ public class Assets implements Disposable, AssetErrorListener {
         assetManager.setErrorListener(this);
         // load texture atlas
         assetManager.load(Constants.TEXTURE_ATLAS_OBJECTS, TextureAtlas.class);
+        // load sounds
+        assetManager.load("sounds/jump.wav", Sound.class);
+        assetManager.load("sounds/jump_with_feather.wav", Sound.class);
+        assetManager.load("sounds/pickup_coin.wav", Sound.class);
+        assetManager.load("sounds/pickup_feather.wav", Sound.class);
+        assetManager.load("sounds/live_lost.wav", Sound.class);
+        // load music
+        assetManager.load("music/Illinois Jacquet-Blue Mood.mp3", Music.class);
         // start loading assets and wait until finished
         assetManager.finishLoading();
         Gdx.app.debug(TAG, "# of assets loaded: " + assetManager.getAssetNames().size);
+
         for(String a : assetManager.getAssetNames()) {
             Gdx.app.debug(TAG, "asset: " + a);
         }
@@ -62,6 +78,8 @@ public class Assets implements Disposable, AssetErrorListener {
         goldCoin = new AssetGoldCoin(atlas);
         feather = new AssetFeather(atlas);
         levelDecoration = new AssetLevelDecoration(atlas);
+        sounds = new AssetSounds(assetManager);
+        music = new AssetMusic(assetManager);
     }
 
     @Override
@@ -162,6 +180,31 @@ public class Assets implements Disposable, AssetErrorListener {
             mountainLeft = atlas.findRegion("mountain_left");
             mountainRight = atlas.findRegion("mountain_right");
             waterOverlay = atlas.findRegion("water_overlay");
+        }
+    }
+
+    //
+    public class AssetSounds {
+        public final Sound jump;
+        public final Sound jumpWithFeather;
+        public final Sound pickupCoin;
+        public final Sound pickupFeather;
+        public final Sound liveLost;
+
+        public AssetSounds(AssetManager am) {
+            jump = am.get("sounds/jump.wav", Sound.class);
+            jumpWithFeather = am.get("sounds/jump_with_feather.wav", Sound.class);
+            pickupCoin = am.get("sounds/pickup_coin.wav", Sound.class);
+            pickupFeather = am.get("sounds/pickup_feather.wav", Sound.class);
+            liveLost = am.get("sounds/live_lost.wav", Sound.class);
+        }
+    }
+
+    public class AssetMusic {
+        public final Music song01;
+        
+        public AssetMusic(AssetManager am) {
+            song01 = am.get("music/Illinois Jacquet-Blue Mood.mp3", Music.class);
         }
     }
 }

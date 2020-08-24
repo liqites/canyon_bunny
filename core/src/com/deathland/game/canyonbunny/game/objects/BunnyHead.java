@@ -4,7 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.deathland.game.canyonbunny.game.Assets;
+import com.deathland.game.canyonbunny.util.AudioManager;
 import com.deathland.game.canyonbunny.util.CharacterSkin;
 import com.deathland.game.canyonbunny.util.Constants;
 import com.deathland.game.canyonbunny.util.GamePreferences;
@@ -66,6 +68,7 @@ public class BunnyHead extends AbstractGameObject{
       switch(jumpState) {
          case GROUNDED: // Character is standing or a platform
             if(jumpKeyPressed) {
+               AudioManager.instance.play(Assets.instance.sounds.jump);
                // Start counting jump time from the beginning
                timeJumping = 0;
                jumpState = JUMP_STATE.JUMP_RISING;
@@ -79,6 +82,7 @@ public class BunnyHead extends AbstractGameObject{
          case FALLING: // FALLING down
          case JUMP_FALLING: // Falling down after jump
             if(jumpKeyPressed && hasFeatherPowerup) {
+               AudioManager.instance.play(Assets.instance.sounds.jumpWithFeather, 1, MathUtils.random(1.0f, 1.1f));
                // TODO: 猜测
                // 如果获得了羽毛能量，则可以在下落的过程中再次弹跳。
                timeJumping = JUMP_TIME_OFFSET_FLYING;
