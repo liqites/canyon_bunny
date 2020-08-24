@@ -28,6 +28,7 @@ public abstract class DirectedGame implements ApplicationListener {
       if (!init) {
          currFbo = new FrameBuffer(Format.RGB888, w, h, false);
          nextFbo = new FrameBuffer(Format.RGB888, w, h, false);
+         batch = new SpriteBatch();
          init = true;
       }
 

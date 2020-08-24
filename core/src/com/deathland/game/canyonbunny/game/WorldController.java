@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Application.ApplicationType;
+import com.deathland.game.canyonbunny.screens.transitions.ScreenTransitionSlice;
 import com.deathland.game.canyonbunny.util.CameraHelper;
 import com.deathland.game.canyonbunny.util.Constants;
 import com.badlogic.gdx.math.Interpolation;
@@ -29,12 +30,14 @@ public class WorldController extends InputAdapter{
 
     private void backToMenu() {
         // switch to menu screen
-        ScreenTransition transition = ScreenTransitionSlide.init(
-            0.75f,
-            ScreenTransitionSlide.DOWN,
-            false,
-            Interpolation.bounceOut
-        );
+//        ScreenTransition transition = ScreenTransitionSlide.init(
+//            0.75f,
+//            ScreenTransitionSlide.DOWN,
+//            false,
+//            Interpolation.bounceOut
+//        );
+
+        ScreenTransition transition = ScreenTransitionSlice.init(2, ScreenTransitionSlice.UP_DOWN, 10, Interpolation.pow5Out);
         game.setScreen(new MenuScreen(game), transition);
     }
 

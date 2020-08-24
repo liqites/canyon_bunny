@@ -74,7 +74,7 @@ public class ScreenTransitionSlice implements ScreenTransition {
                if (i % 2 == 0) {
                   y = -offsetY + offsetY * alpha;
                } else {
-                  y = -offsetY - offsetY * alpha;
+                  y = offsetY - offsetY * alpha;
                }
                break;
          }
