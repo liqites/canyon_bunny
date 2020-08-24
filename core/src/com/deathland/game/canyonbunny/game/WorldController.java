@@ -8,13 +8,17 @@ import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Application.ApplicationType;
+import com.deathland.game.canyonbunny.screens.transitions.ScreenTransitionSlice;
 import com.deathland.game.canyonbunny.util.CameraHelper;
 import com.deathland.game.canyonbunny.util.Constants;
-
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Rectangle;
 import com.deathland.game.canyonbunny.game.objects.BunnyHead;
 import com.deathland.game.canyonbunny.game.objects.BunnyHead.JUMP_STATE;
+import com.deathland.game.canyonbunny.screens.DirectedGame;
 import com.deathland.game.canyonbunny.screens.MenuScreen;
+import com.deathland.game.canyonbunny.screens.transitions.ScreenTransition;
+import com.deathland.game.canyonbunny.screens.transitions.ScreenTransitionSlide;
 import com.deathland.game.canyonbunny.game.objects.Feather;
 import com.deathland.game.canyonbunny.game.objects.GoldCoin;
 import com.deathland.game.canyonbunny.game.objects.Rock;
@@ -22,11 +26,19 @@ import com.deathland.game.canyonbunny.game.objects.Rock;
 public class WorldController extends InputAdapter{
     private static final String TAG = WorldController.class.getName();
 
-    private Game game;
+    private DirectedGame game;
 
     private void backToMenu() {
         // switch to menu screen
-        game.setScreen(new MenuScreen(game));
+//        ScreenTransition transition = ScreenTransitionSlide.init(
+//            0.75f,
+//            ScreenTransitionSlide.DOWN,
+//            false,
+//            Interpolation.bounceOut
+//        );
+
+        ScreenTransition transition = ScreenTransitionSlice.init(2, ScreenTransitionSlice.UP_DOWN, 10, Interpolation.pow5Out);
+        game.setScreen(new MenuScreen(game), transition);
     }
 
     public CameraHelper cameraHelper;
@@ -37,13 +49,13 @@ public class WorldController extends InputAdapter{
     public float livesVisual;
     public float scoreVisual;
 
-    public WorldController(Game game) {
+    public WorldController(DirectedGame game) {
         this.game = game;
         init();
     }
 
     private void init() {
-        Gdx.input.setInputProcessor(this);
+        // Gdx.input.setInputProcessor(this);
         cameraHelper = new CameraHelper();
         lives = Constants.LIVES_START;
         livesVisual = lives;

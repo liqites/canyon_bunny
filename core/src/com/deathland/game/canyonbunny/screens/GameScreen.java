@@ -1,7 +1,7 @@
 package com.deathland.game.canyonbunny.screens;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
 import com.deathland.game.canyonbunny.game.WorldController;
@@ -16,7 +16,7 @@ public class GameScreen extends AbstractGameScreen{
 
    private boolean paused;
 
-   public GameScreen(Game game) {
+   public GameScreen(DirectedGame game) {
       super(game);
    }
 
@@ -73,5 +73,10 @@ public class GameScreen extends AbstractGameScreen{
       super.resume();
       // NOTE: Only called on Android!
       paused = false;
+   }
+
+   @Override
+   public InputProcessor getInputProcessor() {
+      return worldController;
    }
 }

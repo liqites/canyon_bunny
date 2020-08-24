@@ -1,14 +1,15 @@
 package com.deathland.game.canyonbunny.screens;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.deathland.game.canyonbunny.game.Assets;
 
 public abstract class AbstractGameScreen implements Screen{
-   protected Game game;
+   protected DirectedGame game;
 
-   public AbstractGameScreen(Game game) {
+   public AbstractGameScreen(DirectedGame game) {
       this.game = game;
    }
 
@@ -25,4 +26,6 @@ public abstract class AbstractGameScreen implements Screen{
    public void dispose() {
       Assets.instance.dispose();
    }
+
+   public abstract InputProcessor getInputProcessor();
 }
