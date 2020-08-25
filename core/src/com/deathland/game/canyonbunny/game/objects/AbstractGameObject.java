@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 
 public abstract class AbstractGameObject {
     // 位置
@@ -27,6 +28,8 @@ public abstract class AbstractGameObject {
     public Vector2 acceleration;
     // 边界，用于碰撞检测
     public Rectangle bounds;
+    // 
+    public Body body;
 
     public AbstractGameObject() {
         position = new Vector2();
@@ -42,13 +45,19 @@ public abstract class AbstractGameObject {
     }
 
     public void update(float deltaTime) {
-        updateMotionX(deltaTime);
-        updateMotionY(deltaTime);
-        // move to new position
-        // INFO: 根据速度，计算出下一个新的位置
-        position.x += velocity.x * deltaTime;
-        position.y += velocity.y * deltaTime;
-        // Gdx.app.debug(this.getClass().getName(), "position updated: x <"+position.x+"> y<"+position.y+">");
+        if(body == null) {
+            updateMotionX(deltaTime);
+            updateMotionY(deltaTime);
+            // move to new position
+            // INFO: 根据速度，计算出下一个新的位置
+            position.x += velocity.x * deltaTime;
+            position.y += velocity.y * deltaTime;
+            // Gdx.app.debug(this.getClass().getName(), "position updated: x <"+position.x+"> y<"+position.y+">");
+        } else {
+            // 将控制权交给 box2d
+            position.set(body.getPosition());
+            rotation = body.getAngle() * MathUtils.radiansToDegrees;
+        }
     }
 
     // 更新 X 轴方向的速度

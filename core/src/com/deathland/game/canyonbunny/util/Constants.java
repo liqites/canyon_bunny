@@ -25,11 +25,20 @@ public class Constants {
 
     // Delay after game over
     public static final float TIME_DELAY_GAME_OVER = 3;
-
+ 
     public static final String TEXTURE_ATLAS_UI = "canyonbunny-ui.pack.atlas";
     public static final String TEXTURE_ATLAS_LIBGDX_UI = "uiskin.atlas";
     public static final String SKIN_LIBGDX_UI = "uiskin.json";
     public static final String SKIN_CANYONBUNNY_UI = "canyonbunny-ui.json";
 
     public static final String PREFERENCES = "canyonbunny.preferences";
+
+    // Number of carrots to spawn
+    public static final int CARROTS_SPAWN_MAX = 100;
+
+    // Spawn radius for carrots
+    public static final float CARROTS_SPAWN_RADIUN = 3.5f;
+
+    // Delay after game finished
+    public static final float TIME_DELAY_GAME_FINISHED = 6;
 }
