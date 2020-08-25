@@ -17,7 +17,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -103,6 +102,7 @@ public class WorldController extends InputAdapter implements Disposable{
     }
 
     private void spawnCarrots(Vector2 pos, int numCarrots, float radius) {
+        Gdx.app.debug(TAG, "spawnCarrots(pos: " + pos + ", numCarrots: " + numCarrots + ", radius: " + radius + ")");
         float carrotShapeScale = 0.5f;
         // create carrots with box2d body and fixture
         for(int i = 0; i < numCarrots; i++) {
@@ -121,6 +121,7 @@ public class WorldController extends InputAdapter implements Disposable{
             bodyDef.position.add(x, y);
             bodyDef.angle = rotation;
             Body body = b2World.createBody(bodyDef);
+            body.setType(BodyType.DynamicBody);
             carrot.body = body;
             // create rectangular shape for carrot to allow
             // interactions (collisions) with other objects
@@ -323,6 +324,7 @@ public class WorldController extends InputAdapter implements Disposable{
     }
     
     private void onCollisionBunnyWithGoal() {
+        Gdx.app.debug(TAG, "onCollisionBunnyWithGoal");
         goalReached = true;
         timeLeftGameOverDelay = Constants.TIME_DELAY_GAME_FINISHED;
         Vector2 centerPosBunnyHead = new Vector2(level.bunnyHead.position);

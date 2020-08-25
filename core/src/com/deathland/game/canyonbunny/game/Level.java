@@ -3,6 +3,7 @@ package com.deathland.game.canyonbunny.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.deathland.game.canyonbunny.game.objects.*;
 
@@ -98,6 +99,7 @@ public class Level {
                     obj = new BunnyHead();
                     offsetHeight = -3.0f;
                     obj.position.set(pixelX, baseHeight * obj.dimension.y + offsetHeight);
+                    obj.terminalVelocity = new Vector2(8, 4);
                     bunnyHead = (BunnyHead)obj;
                     Gdx.app.debug(TAG, "BunnyHead initialized at x<" + pixelX + "> y <" + pixelY + ">");
                 } else if(BLOCK_TYPE.ITEM_FEATHER.samColor(currentPixel)) {
