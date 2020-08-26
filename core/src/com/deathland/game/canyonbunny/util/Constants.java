@@ -41,4 +41,8 @@ public class Constants {
 
     // Delay after game finished
     public static final float TIME_DELAY_GAME_FINISHED = 6;
+
+    // Shader 
+    public static final String shaderMonochromeVertex = "shaders/monochrome.vs";
+    public static final String shaderMonochromeFragment = "shaders/monochrome.fs";
 }
