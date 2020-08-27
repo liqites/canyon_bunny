@@ -25,7 +25,7 @@ public class WorldRenderer implements Disposable {
     private static final boolean DEBUG_DRAW_BOX2D_WORLD = true;
     private Box2DDebugRenderer b2debugRenderer;
 
-    private ShaderProgram shaderMonochrome;
+    // private ShaderProgram shaderMonochrome;
 
     public WorldRenderer(WorldController worldController) {
         this.worldController = worldController;
@@ -50,14 +50,14 @@ public class WorldRenderer implements Disposable {
         b2debugRenderer = new Box2DDebugRenderer();
 
         // add shader
-        shaderMonochrome = new ShaderProgram(
-            Gdx.files.internal(Constants.shaderMonochromeVertex),
-            Gdx.files.internal(Constants.shaderMonochromeFragment)
-        );
-        if(!shaderMonochrome.isCompiled()) {
-            String msg = "Could not compile shader program: " + shaderMonochrome.getLog();
-            throw new GdxRuntimeException(msg);
-        }
+        // shaderMonochrome = new ShaderProgram(
+        //     Gdx.files.internal(Constants.shaderMonochromeVertex),
+        //     Gdx.files.internal(Constants.shaderMonochromeFragment)
+        // );
+        // if(!shaderMonochrome.isCompiled()) {
+        //     String msg = "Could not compile shader program: " + shaderMonochrome.getLog();
+        //     throw new GdxRuntimeException(msg);
+        // }
     }
 
     public void render() {
@@ -93,12 +93,12 @@ public class WorldRenderer implements Disposable {
         worldController.cameraHelper.applyTo(camera);
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
-        if(GamePreferences.instance.useMonochromeShader) {
-            batch.setShader(shaderMonochrome);
-            shaderMonochrome.setUniformf("u_amount", 1.0f);
-        }
+        // if(GamePreferences.instance.useMonochromeShader) {
+        //     batch.setShader(shaderMonochrome);
+        //     shaderMonochrome.setUniformf("u_amount", 1.0f);
+        // }
         worldController.level.render(batch);
-        batch.setShader(null);
+        // batch.setShader(null);
         batch.end();
         if(DEBUG_DRAW_BOX2D_WORLD) {
             b2debugRenderer.render(worldController.b2World, camera.combined);
@@ -258,6 +258,6 @@ public class WorldRenderer implements Disposable {
     @Override
     public void dispose() {
         batch.dispose();
-        shaderMonochrome.dispose();
+        // shaderMonochrome.dispose();
     }
 }

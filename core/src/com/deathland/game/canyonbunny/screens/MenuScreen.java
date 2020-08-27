@@ -360,7 +360,9 @@ public class MenuScreen extends AbstractGameScreen {
       stage.act(deltaTime);
       stage.draw();
 
-      // FIXME: 原来的方法已经废弃了，使用新的 debug 方法
+      // INFO: 原来的方法已经废弃了，使用新的 debug 方法
+      // Table.drawDebug(stage); 在书中的代码是老版本的，
+      // 在新版本中的代码，需要使用 stage.setDebugAll(true)
       // Table.drawDebug(stage);
       stage.setDebugAll(true);
 
