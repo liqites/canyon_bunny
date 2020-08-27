@@ -58,6 +58,7 @@ public class MenuScreen extends AbstractGameScreen {
    private SelectBox<CharacterSkin> selCharSkin;
    private Image imgCharSkin;
    private CheckBox chkShowFpsCounter;
+   private CheckBox chkUseMonochromeShader;
 
    // debug
    private final float DEBUG_REBUILD_INTERVAL = 5.0f;
@@ -81,6 +82,7 @@ public class MenuScreen extends AbstractGameScreen {
       selCharSkin.setSelectedIndex(prefs.charSkin);
       onCharSkinSelected(prefs.charSkin);
       chkShowFpsCounter.setChecked(prefs.showFpsCounter);
+      chkUseMonochromeShader.setChecked(prefs.useMonochromeShader);
    }
 
    private void saveSettings() {
@@ -91,6 +93,7 @@ public class MenuScreen extends AbstractGameScreen {
       prefs.volMusic = sldMusic.getValue();
       prefs.charSkin = selCharSkin.getSelectedIndex();
       prefs.showFpsCounter = chkShowFpsCounter.isChecked();
+      prefs.useMonochromeShader = chkUseMonochromeShader.isChecked();
       prefs.save();
    }
 
@@ -198,6 +201,11 @@ public class MenuScreen extends AbstractGameScreen {
       chkShowFpsCounter = new CheckBox("", skinLibgdx);
       tbl.add(new Label("Show FPS Counter", skinLibgdx));
       tbl.add(chkShowFpsCounter);
+      tbl.row();
+      // + Checkbox, "Use Monochrome Shader" label
+      chkUseMonochromeShader = new CheckBox("", skinLibgdx);
+      tbl.add(new Label("Use Monochrome Shader", skinLibgdx));
+      tbl.add(chkUseMonochromeShader);
       tbl.row();
       return tbl;
    }
@@ -352,7 +360,9 @@ public class MenuScreen extends AbstractGameScreen {
       stage.act(deltaTime);
       stage.draw();
 
-      // FIXME: 原来的方法已经废弃了，使用新的 debug 方法
+      // INFO: 原来的方法已经废弃了，使用新的 debug 方法
+      // Table.drawDebug(stage); 在书中的代码是老版本的，
+      // 在新版本中的代码，需要使用 stage.setDebugAll(true)
       // Table.drawDebug(stage);
       stage.setDebugAll(true);
 

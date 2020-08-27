@@ -12,8 +12,18 @@ import com.deathland.game.canyonbunny.util.AudioManager;
 import com.deathland.game.canyonbunny.util.CameraHelper;
 import com.deathland.game.canyonbunny.util.Constants;
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.utils.Disposable;
 import com.deathland.game.canyonbunny.game.objects.BunnyHead;
+import com.deathland.game.canyonbunny.game.objects.Carrot;
 import com.deathland.game.canyonbunny.game.objects.BunnyHead.JUMP_STATE;
 import com.deathland.game.canyonbunny.screens.DirectedGame;
 import com.deathland.game.canyonbunny.screens.MenuScreen;
@@ -22,7 +32,7 @@ import com.deathland.game.canyonbunny.game.objects.Feather;
 import com.deathland.game.canyonbunny.game.objects.GoldCoin;
 import com.deathland.game.canyonbunny.game.objects.Rock;
 
-public class WorldController extends InputAdapter{
+public class WorldController extends InputAdapter implements Disposable{
     private static final String TAG = WorldController.class.getName();
 
     private DirectedGame game;
@@ -42,6 +52,9 @@ public class WorldController extends InputAdapter{
     public float livesVisual;
     public float scoreVisual;
 
+    private boolean goalReached;
+    public World b2World;
+
     public WorldController(DirectedGame game) {
         this.game = game;
         init();
@@ -55,11 +68,78 @@ public class WorldController extends InputAdapter{
         initLevel();
     }
 
+    private void initPhysics() {
+        if(b2World != null) {
+            b2World.dispose();
+        }
+        b2World = new World(new Vector2(0, -9.8f), true);
+        // Rocks
+        Vector2 origin = new Vector2();
+        for(Rock rock : level.rocks) {
+            BodyDef bodyDef = new BodyDef();
+            bodyDef.type = BodyType.KinematicBody;
+            bodyDef.position.set(rock.position);
+            Body body = b2World.createBody(bodyDef);
+            rock.body = body;
+            PolygonShape polygonShape = new PolygonShape();
+            origin.x = rock.bounds.width / 2.0f;
+            origin.y = rock.bounds.height / 2.0f;
+            polygonShape.setAsBox(rock.bounds.width / 2.0f, rock.bounds.height / 2.0f, origin, 0);
+            FixtureDef fixtureDef = new FixtureDef();
+            fixtureDef.shape = polygonShape;
+            body.createFixture(fixtureDef);
+            polygonShape.dispose();
+        }
+    }
+
     private void initLevel() {
         score = 0;
         scoreVisual = score;
+        goalReached = false;
         level = new Level(Constants.LEVEL_01);
         cameraHelper.setTarget(level.bunnyHead);
+        initPhysics();
+    }
+
+    private void spawnCarrots(Vector2 pos, int numCarrots, float radius) {
+        Gdx.app.debug(TAG, "spawnCarrots(pos: " + pos + ", numCarrots: " + numCarrots + ", radius: " + radius + ")");
+        float carrotShapeScale = 0.5f;
+        // create carrots with box2d body and fixture
+        for(int i = 0; i < numCarrots; i++) {
+            Carrot carrot = new Carrot();
+            // calculate random spawn position, rotation, and scale
+            float x = MathUtils.random(-radius, radius);
+            float y = MathUtils.random(5.0f, 15.0f);
+
+            float rotation = MathUtils.random(0.0f, 360.0f) * MathUtils.degreesToRadians;
+            float carrotScale = MathUtils.random(0.5f, 1.5f);
+            carrot.scale.set(carrotScale, carrotScale);
+            // create box2d body for carrot with start position
+            // and angle of rotatio
+            BodyDef bodyDef = new BodyDef();
+            bodyDef.position.set(pos);
+            bodyDef.position.add(x, y);
+            bodyDef.angle = rotation;
+            Body body = b2World.createBody(bodyDef);
+            body.setType(BodyType.DynamicBody);
+            carrot.body = body;
+            // create rectangular shape for carrot to allow
+            // interactions (collisions) with other objects
+            PolygonShape polygonShape = new PolygonShape();
+            float halfWidth = carrot.bounds.width / 2.0f * carrotScale;
+            float halfHeight = carrot.bounds.height / 2.0f * carrotScale;
+            polygonShape.setAsBox(halfWidth * carrotShapeScale, halfHeight * carrotShapeScale);
+            // set physics attributes
+            FixtureDef fixtureDef = new FixtureDef();
+            fixtureDef.shape = polygonShape;
+            fixtureDef.density = 50;
+            fixtureDef.restitution = 0.5f; // 恢复系数
+            fixtureDef.friction = 0.5f;
+            body.createFixture(fixtureDef);
+            polygonShape.dispose();
+            // finally, add new carrot to list for updating/rendering
+            level.carrots.add(carrot);
+        }
     }
 
     private Pixmap createProceduralPixmap(int width, int height) {
@@ -79,7 +159,7 @@ public class WorldController extends InputAdapter{
 
     public void update(float deltaTime) {
         handleDebugInput(deltaTime);
-        if(isGameOver()) {
+        if(isGameOver() || goalReached) {
             timeLeftGameOverDelay -= deltaTime;
             if(timeLeftGameOverDelay < 0) {
                 backToMenu();
@@ -89,6 +169,7 @@ public class WorldController extends InputAdapter{
         }
         level.update(deltaTime);
         testCollision();
+        b2World.step(deltaTime, 8, 3);
         cameraHelper.update(deltaTime);
         if(!isGameOver() && isPlayerInWater()) {
             AudioManager.instance.play(Assets.instance.sounds.liveLost);
@@ -187,6 +268,13 @@ public class WorldController extends InputAdapter{
     }
 
     @Override
+    public void dispose() {
+        if(b2World != null) {
+            b2World.dispose();
+        }
+    }
+
+    @Override
     public boolean keyUp(int keycode) {
         // Reset game world
         if (keycode == Keys.R) {
@@ -233,6 +321,15 @@ public class WorldController extends InputAdapter{
                 bunnyHead.position.y = rock.position.y + bunnyHead.bounds.height + bunnyHead.origin.y;
                 break;
         }
+    }
+    
+    private void onCollisionBunnyWithGoal() {
+        Gdx.app.debug(TAG, "onCollisionBunnyWithGoal");
+        goalReached = true;
+        timeLeftGameOverDelay = Constants.TIME_DELAY_GAME_FINISHED;
+        Vector2 centerPosBunnyHead = new Vector2(level.bunnyHead.position);
+        centerPosBunnyHead.x += level.bunnyHead.bounds.width;
+        spawnCarrots(centerPosBunnyHead, Constants.CARROTS_SPAWN_MAX, Constants.CARROTS_SPAWN_RADIUN);
     }
 
     private void onCollisionBunnyWithGoldCoin(GoldCoin goldCoin) {
@@ -297,6 +394,14 @@ public class WorldController extends InputAdapter{
             if(!r1.overlaps(r2)) continue;
             onCollisionBunnyWithFeather(feather);
             break;
+        }
+        if(!goalReached) {
+            r2.set(level.goal.bounds);
+            r2.x += level.goal.position.x;
+            r2.y += level.goal.position.y;
+            if(r1.overlaps(r2)) {
+                onCollisionBunnyWithGoal();
+            }
         }
     }
 

@@ -3,6 +3,7 @@ package com.deathland.game.canyonbunny.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.deathland.game.canyonbunny.game.objects.*;
 
@@ -10,6 +11,7 @@ public class Level {
     public static final String TAG = Level.class.getName();
 
     public enum BLOCK_TYPE {
+        GOAL(255, 0, 0), // red
         EMPTY(0, 0, 0), // black
         ROCK(0, 255, 0), // green
         PLAYER_SPAWNPOINT(255, 255, 255), // white
@@ -30,6 +32,10 @@ public class Level {
             return color;
         }
     }
+
+    // Carrots and Goal
+    public Array<Carrot> carrots;
+    public Goal goal;
 
     // player
     public BunnyHead bunnyHead;
@@ -56,6 +62,7 @@ public class Level {
         rocks = new Array<Rock>();
         goldCoins = new Array<GoldCoin>();
         feathers = new Array<Feather>();
+        carrots = new Array<Carrot>();
 
         // load image file that represents the level data;
         Pixmap pixmap = new Pixmap(Gdx.files.internal(filename));
@@ -92,6 +99,7 @@ public class Level {
                     obj = new BunnyHead();
                     offsetHeight = -3.0f;
                     obj.position.set(pixelX, baseHeight * obj.dimension.y + offsetHeight);
+                    obj.terminalVelocity = new Vector2(8, 4);
                     bunnyHead = (BunnyHead)obj;
                     Gdx.app.debug(TAG, "BunnyHead initialized at x<" + pixelX + "> y <" + pixelY + ">");
                 } else if(BLOCK_TYPE.ITEM_FEATHER.samColor(currentPixel)) {
@@ -107,6 +115,12 @@ public class Level {
                     offsetHeight = -1.5f;
                     obj.position.set(pixelX, baseHeight * obj.dimension.y + offsetHeight);
                     goldCoins.add((GoldCoin)obj);
+                }  else if(BLOCK_TYPE.GOAL.samColor(currentPixel)) {
+                    // goal
+                    obj = new Goal();
+                    offsetHeight = -7.0f;
+                    obj.position.set(pixelX, baseHeight + offsetHeight);
+                    goal = (Goal)obj;
                 } else {
                     // unknown object/pixel color
                     int r = 0xff & (currentPixel >> 24); // red color channel
@@ -137,28 +151,30 @@ public class Level {
     public void render(SpriteBatch batch) {
         // Draw mountains
         mountains.render(batch);
+        //
+        goal.render(batch);
         // Draw Rocks
         for(Rock rock : rocks) {
             rock.render(batch);
         }
-
         // Draw GoldCoins
         for(GoldCoin goldCoin : goldCoins) {
             goldCoin.render(batch);
         }
-
         // Draw Feathers
         for(Feather feather : feathers) {
             feather.render(batch);
         }
-
-        // Draw Player Character
-        bunnyHead.render(batch);
-
         // Draw Water Overlay
         waterOverlay.render(batch);
         // Draw clouds
         clouds.render(batch);
+        // Draw Carrots
+        for(Carrot carrot : carrots) {
+            carrot.render(batch);
+        }
+        // Draw Player Character
+        bunnyHead.render(batch);
     }
 
     public void update(float deltaTime) {
@@ -171,6 +187,9 @@ public class Level {
         }
         for(Feather feather : feathers) {
             feather.update(deltaTime);
+        }
+        for(Carrot carrot : carrots) {
+            carrot.update(deltaTime);
         }
         clouds.update(deltaTime);
     }
