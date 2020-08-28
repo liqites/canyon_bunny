@@ -99,7 +99,7 @@ public class Level {
                     obj = new BunnyHead();
                     offsetHeight = -3.0f;
                     obj.position.set(pixelX, baseHeight * obj.dimension.y + offsetHeight);
-                    obj.terminalVelocity = new Vector2(8, 4);
+                    obj.terminalVelocity = new Vector2(6, 3);
                     bunnyHead = (BunnyHead)obj;
                     Gdx.app.debug(TAG, "BunnyHead initialized at x<" + pixelX + "> y <" + pixelY + ">");
                 } else if(BLOCK_TYPE.ITEM_FEATHER.samColor(currentPixel)) {
