@@ -47,7 +47,14 @@ public class BunnyHead extends AbstractGameObject{
    public void init() {
       Gdx.app.debug(TAG, "Object BunnyHead calls init()");
       dimension.set(1, 1);
-      regHead = Assets.instance.bunny.head;
+
+      // Animation
+      animNormal = Assets.instance.bunny.animNormal;
+      animCopterTransform = Assets.instance.bunny.animCopterTransform;
+      animCopterTransformBack = Assets.instance.bunny.animCopterTransformBack;
+      animCopterRotate = Assets.instance.bunny.animCopterRotate;
+      setAnimation(animNormal);
+
       // Center image on game object
       origin.set(dimension.x / 2, dimension.y / 2);
       // Bounding box for collsion deetection
@@ -118,14 +125,38 @@ public class BunnyHead extends AbstractGameObject{
          viewDirection = velocity.x < 0 ? VIEW_DIRECTION.LEFT : VIEW_DIRECTION.RIGHT;
       }
       if(timeLeftFeatherPowerup > 0) {
+         if(animation == animCopterTransformBack) {
+            // Restart "Transform" animation if another feather power-up
+            // was picked up during "TransformBack" animation. Otherwise,
+            // the "TransformBack" animation would be stuck while the
+            // power-up is still active.
+            setAnimation(animCopterTransform);
+         }
+
          timeLeftFeatherPowerup -= deltaTime;
          if(timeLeftFeatherPowerup < 0 ) {
             // disable power-up
             timeLeftFeatherPowerup = 0;
             setFeatherPowerup(false);
+            setAnimation(animCopterTransformBack);
          }
       }
       dustParticles.update(deltaTime);
+
+      // Change animation state according to feather power-up
+      if(hasFeatherPowerup) {
+         if(animation == animNormal) {
+            setAnimation(animCopterTransform);
+         } else if(animation == animCopterTransform) {
+            if(animation.isAnimationFinished(stateTime)) { setAnimation(animCopterRotate); }
+         }
+      } else {
+         if(animation == animCopterRotate) {
+            if(animation.isAnimationFinished(stateTime)) { setAnimation(animCopterTransformBack); }
+         } else if(animation == animCopterTransformBack) {
+            if(animation.isAnimationFinished(stateTime)) { setAnimation(animNormal); }
+         }
+      }
    }
 
    // 重写更新 Y 轴方向的方法
@@ -177,8 +208,15 @@ public class BunnyHead extends AbstractGameObject{
          batch.setColor(1.0f, 0.8f, 0.1f, 1.0f);
       }
 
+      float dimCorrectionX = 0;
+      float dimCorrectionY = 0;
+      if(animation != animNormal) {
+         dimCorrectionX = 0.05f;
+         dimCorrectionY = 0.2f;
+      }
+
       // Draw image
-      reg = regHead;
+      reg = (TextureRegion)animation.getKeyFrame(stateTime, true);
 
       batch.draw(
          reg.getTexture(),
@@ -186,8 +224,8 @@ public class BunnyHead extends AbstractGameObject{
          position.y,
          origin.x,
          origin.y,
-         dimension.x,
-         dimension.y,
+         dimension.x + dimCorrectionX,
+         dimension.y + dimCorrectionY,
          scale.x,
          scale.y,
          rotation,

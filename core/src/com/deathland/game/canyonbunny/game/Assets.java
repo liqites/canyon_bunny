@@ -160,7 +160,7 @@ public class Assets implements Disposable, AssetErrorListener {
             // Animation: Bunny Copter - rotate ears
             regions = new Array<AtlasRegion>();
             regions.add(atlas.findRegion("anim_bunny_copter", 4));
-            regions.add(atlas.findRegion("anim_bunny_copter", 45));
+            regions.add(atlas.findRegion("anim_bunny_copter", 5));
             animCopterRotate = new Animation(1.0f / 15.0f, regions);
         }
     }
