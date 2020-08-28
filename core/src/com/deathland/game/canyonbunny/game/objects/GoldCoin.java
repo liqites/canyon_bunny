@@ -2,6 +2,7 @@ package com.deathland.game.canyonbunny.game.objects;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.deathland.game.canyonbunny.game.Assets;
 
 public class GoldCoin extends AbstractGameObject{
@@ -16,6 +17,9 @@ public class GoldCoin extends AbstractGameObject{
     private void init() {
         dimension.set(0.5f, 0.5f);
 
+        setAnimation(Assets.instance.goldCoin.animGoldCoin);
+        stateTime = MathUtils.random(0.0f, 1.0f);
+
         regGoldCoin = Assets.instance.goldCoin.goldCoin;
 
         // Set bounding box for collision detection
@@ -28,7 +32,7 @@ public class GoldCoin extends AbstractGameObject{
         if(collected) return;
 
         TextureRegion reg = null;
-        reg = regGoldCoin;
+        reg = (TextureRegion)animation.getKeyFrame(stateTime, true);
         batch.draw(
             reg.getTexture(),
             position.x,

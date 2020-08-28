@@ -1,6 +1,7 @@
 package com.deathland.game.canyonbunny.game.objects;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -24,6 +25,12 @@ public class BunnyHead extends AbstractGameObject{
       GROUNDED, FALLING, JUMP_RISING, JUMP_FALLING
    }
    private TextureRegion regHead;
+
+   // animation
+   private Animation animNormal;
+   private Animation animCopterTransform;
+   private Animation animCopterTransformBack;
+   private Animation animCopterRotate;
 
    public VIEW_DIRECTION viewDirection;
    public float timeJumping;
